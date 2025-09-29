@@ -2,16 +2,19 @@ import { Courses } from "./types/Menu";
 import { Restaurant } from "./types/Restaurant";
 
 const restaurantRow = (restaurant: Restaurant) => {
-  const {name, address, company} = restaurant;
+  const {name, address, city, company} = restaurant;
   const tr = document.createElement('tr');
   const nameCell = document.createElement('td');
   nameCell.innerText = name;
   const addressCell = document.createElement('td');
   addressCell.innerText = address;
+  const cityCell = document.createElement('td');
+  cityCell.innerText = city;
   const companyCell = document.createElement('td');
   companyCell.innerText = company;
   tr.appendChild(nameCell);
   tr.appendChild(addressCell);
+  tr.appendChild(cityCell);
   tr.appendChild(companyCell);
   return tr;
 };

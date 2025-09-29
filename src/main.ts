@@ -1,7 +1,7 @@
 import {errorModal, restaurantModal, restaurantRow} from './components';
 import {fetchData} from './functions';
-import { Courses } from './types/Menu';
-import { Restaurant } from './types/Restaurant';
+import {Courses} from './types/Menu';
+import {Restaurant} from './types/Restaurant';
 import {apiUrl, positionOptions} from './variables';
 
 const modal = document.querySelector('dialog') as HTMLDialogElement;
@@ -26,21 +26,16 @@ const createTable = (restaurants: Restaurant[]) => {
     table.appendChild(tr);
     tr.addEventListener('click', async () => {
       try {
-        // remove all highlights
         const allHighs = document.querySelectorAll('.highlight');
         allHighs.forEach((high) => {
           high.classList.remove('highlight');
         });
-        // add highlight
         tr.classList.add('highlight');
-        // add restaurant data to modal
         modal.innerHTML = '';
 
-        // fetch menu
         const menu = await fetchData<Courses>(
           apiUrl + `/restaurants/daily/${restaurant._id}/fi`
         );
-        console.log(menu);
 
         if (menu.courses && menu.courses.length) {
           const menuHtml = restaurantModal(restaurant, menu);
@@ -58,8 +53,20 @@ const createTable = (restaurants: Restaurant[]) => {
   });
 };
 
-const error = (err: GeolocationPositionError) => {
+const error = async (err: GeolocationPositionError) => {
   console.warn(`ERROR(${err.code}): ${err.message}`);
+  try {
+    const restaurants = await fetchData<Restaurant[]>(apiUrl + '/restaurants');
+    restaurants.sort((a, b) => {
+      const cityCompare = (a.city || '').localeCompare(b.city || '');
+      if (cityCompare !== 0) return cityCompare;
+      return a.name.localeCompare(b.name);
+    });
+    createTable(restaurants);
+  } catch (fetchError) {
+    modal.innerHTML = errorModal((fetchError as Error).message);
+    modal.showModal();
+  }
 };
 
 const success = async (pos: GeolocationPosition) => {
@@ -79,7 +86,6 @@ const success = async (pos: GeolocationPosition) => {
       return distanceA - distanceB;
     });
     createTable(restaurants);
-    // buttons for filtering
     const sodexoBtn = document.querySelector('#sodexo');
     const compassBtn = document.querySelector('#compass');
     const resetBtn = document.querySelector('#reset');

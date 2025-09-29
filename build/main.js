@@ -1,16 +1,19 @@
 'use strict';
 
 const restaurantRow = (restaurant) => {
-    const { name, address, company } = restaurant;
+    const { name, address, city, company } = restaurant;
     const tr = document.createElement('tr');
     const nameCell = document.createElement('td');
     nameCell.innerText = name;
     const addressCell = document.createElement('td');
     addressCell.innerText = address;
+    const cityCell = document.createElement('td');
+    cityCell.innerText = city;
     const companyCell = document.createElement('td');
     companyCell.innerText = company;
     tr.appendChild(nameCell);
     tr.appendChild(addressCell);
+    tr.appendChild(cityCell);
     tr.appendChild(companyCell);
     return tr;
 };
@@ -83,18 +86,13 @@ const createTable = (restaurants) => {
         table.appendChild(tr);
         tr.addEventListener('click', async () => {
             try {
-                // remove all highlights
                 const allHighs = document.querySelectorAll('.highlight');
                 allHighs.forEach((high) => {
                     high.classList.remove('highlight');
                 });
-                // add highlight
                 tr.classList.add('highlight');
-                // add restaurant data to modal
                 modal.innerHTML = '';
-                // fetch menu
                 const menu = await fetchData(apiUrl + `/restaurants/daily/${restaurant._id}/fi`);
-                console.log(menu);
                 if (menu.courses && menu.courses.length) {
                     const menuHtml = restaurantModal(restaurant, menu);
                     modal.insertAdjacentHTML('beforeend', menuHtml);
@@ -111,8 +109,22 @@ const createTable = (restaurants) => {
         });
     });
 };
-const error = (err) => {
+const error = async (err) => {
     console.warn(`ERROR(${err.code}): ${err.message}`);
+    try {
+        const restaurants = await fetchData(apiUrl + '/restaurants');
+        restaurants.sort((a, b) => {
+            const cityCompare = (a.city || '').localeCompare(b.city || '');
+            if (cityCompare !== 0)
+                return cityCompare;
+            return a.name.localeCompare(b.name);
+        });
+        createTable(restaurants);
+    }
+    catch (fetchError) {
+        modal.innerHTML = errorModal(fetchError.message);
+        modal.showModal();
+    }
 };
 const success = async (pos) => {
     try {
@@ -131,7 +143,6 @@ const success = async (pos) => {
             return distanceA - distanceB;
         });
         createTable(restaurants);
-        // buttons for filtering
         const sodexoBtn = document.querySelector('#sodexo');
         const compassBtn = document.querySelector('#compass');
         const resetBtn = document.querySelector('#reset');
