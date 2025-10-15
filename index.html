@@ -1,14 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="main.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suomen Opiskelijaravintolat</title>
+    <link href="style.css" rel="stylesheet">
+    <link href="fontawesome.css" rel="stylesheet">
+    <script src="build/main.js" type="module"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="theme-color" content="white"/>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Opiskelijaravintolat">
+    <meta name="msapplication-TileImage" content="images/hello-icon-144.png">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <link rel="icon" type="image/png" href="src/assets/icons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="src/assets/icons/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="src/assets/icons/apple-touch-icon.png" />
   </head>
-
   <body>
-    <h1>Sample Page</h1>
+    <header>Suomen opiskelijaravintolat  <img src="src/assets/icons/restaurant-outline-svgrepo-com.svg" alt="Restaurant icon" width="34" height="34" /></header>
+    <main class="grid-layout">
+      <h2>Suodata tuloksia</h2>
+      <div id="filters">
+        <fieldset class="filter-group">
+          <legend>Järjestä</legend>
+          <button id="sortAlphabetically">Aakkosjärjestys</button>
+        </fieldset>
+        <fieldset class="filter-group">
+            <legend>Palveluntarjoaja</legend>
+            <button id="sodexo">Sodexo</button>
+            <button id="compass">Compass Group</button>
+        </fieldset>
+        <fieldset class="filter-group">
+            <legend>Kaupunki</legend>
+            <label for="cityFilter">Rajaa kaupungin mukaan:</label>
+            <select id="cityFilter">
+              <option value="">Kaikki kaupungit</option>
+            </select>
+        </fieldset>
+        <button id="reset" class="reset-button">Näytä kaikki</button>
+      </div>
+      <div id="teema">
+        <input type="checkbox" class="checkbox" id="checkbox">
+        <label for="checkbox" class="checkbox-label">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+        <span class="ball"></span>
+        </label>
+      </div>
+      <section class="results">
+        <table class="mainTable">
+            <tr>
+              <th>Nimi</th>
+              <th>Osoite</th>
+              <th>Kaupunki</th>
+              <th>Yritys</th>
+            </tr>
+        </table>
+      </section>
+    </main>
+    <dialog></dialog>
   </body>
 </html>
