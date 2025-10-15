@@ -1,11 +1,18 @@
 type Courses = {
-    courses: Course[];
-}
+  courses: Course[];
+};
 
 type Course = {
-    name: string;
-    price: string,
-    diets: string;
-}
+  name: string;
+  price: string;
+  diets: string;
+};
 
-export {Courses, Course}
+type WeeklyMenu = {
+  days: {
+    date: string;
+    courses: Course[];
+  }[];
+};
+
+export { Courses, Course, WeeklyMenu };
