@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Happy+Monkey&family=Roboto:ital,wdth,wght@0,75..100,100..900;1,75..100,100..900&display=swap');
-
 :root {
-  --primary: #447DDA;
+  --primary: #447dda;
   --accent: #f9a825;
   --background: #f4f6f8;
   --text: #1a1a1a;
@@ -11,8 +9,8 @@
   --header-text: #1a1a1a;
 }
 
-[data-theme="dark"] {
-  --primary: #68A4D4;
+[data-theme='dark'] {
+  --primary: #68a4d4;
   --accent: #ffb74d;
   --background: #121212;
   --text: #ffffff;
@@ -22,14 +20,32 @@
   --header-text: #1a1a1a;
 }
 
+@font-face {
+  font-family: 'Happy Monkey';
+  src: url('/~suvimyn/2025/jakso1/projekti/src/assets/fonts/HappyMonkey-Regular.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/~suvimyn/2025/jakso1/projekti/src/assets/fonts/Roboto-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   width: 100%;
   color: var(--text);
   background-color: var(--background);
@@ -38,13 +54,13 @@ body {
 }
 
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('src/assets/img/pexels-kindelmedia-7651707.jpg');
+  background-image: url('/~suvimyn/2025/jakso1/projekti/src/assets/img/pexels-kindelmedia-7651707.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -59,7 +75,7 @@ header {
   font-size: 40px;
   text-align: center;
   padding: 10px 0;
-  font-family: "Happy Monkey", serif;
+  font-family: 'Happy Monkey', serif;
 }
 
 main {
@@ -74,9 +90,9 @@ main {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-areas:
-    "title title theme"
-    "filters filters filters"
-    "table table table";
+    'title title theme'
+    'filters filters filters'
+    'table table table';
   gap: 1.5em;
 }
 
@@ -171,7 +187,7 @@ main {
   border-radius: 50px;
   position: relative;
   cursor: pointer;
-  font-family: "Font Awesome 7 Free";
+  font-family: 'Font Awesome 7 Free';
   font-style: unset;
 }
 
@@ -180,8 +196,12 @@ main {
   position: absolute;
 }
 
-.fa-moon { color: #f1c40f; }
-.fa-sun { color: #f39c12; }
+.fa-moon {
+  color: #f1c40f;
+}
+.fa-sun {
+  color: #f39c12;
+}
 
 .checkbox-label .ball {
   background-color: #fff;
@@ -322,10 +342,10 @@ dialog::backdrop {
   .grid-layout {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "theme"
-      "title"
-      "filters"
-      "table";
+      'theme'
+      'title'
+      'filters'
+      'table';
   }
 
   header {

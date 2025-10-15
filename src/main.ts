@@ -31,7 +31,7 @@ if (checkbox) {
 //Service worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("/build/sw.js")
+    .register("/~suvimyn/2025/jakso1/projekti/build/sw.js")
     .then((reg) => console.log("Service worker registered:", reg))
     .catch((err) => console.error("Registration failed:", err));
 } else {

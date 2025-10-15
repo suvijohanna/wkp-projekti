@@ -3,20 +3,24 @@
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2025 Fonticons, Inc.
  */
-:root, :host {
-  --fa-family-classic: "Font Awesome 7 Free";
+:root,
+:host {
+  --fa-family-classic: 'Font Awesome 7 Free';
   --fa-font-solid: normal 900 1em/1 var(--fa-family-classic);
   /* deprecated: this older custom property will be removed next major release */
   --fa-style-family-classic: var(--fa-family-classic);
 }
 
 @font-face {
-  font-family: "Font Awesome 7 Free";
+  font-family: 'Font Awesome 7 Free';
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url("src/assets/fonts/fa-solid-900.woff2") format("woff2"),
-       url("src/assets/fonts/fa-solid-900.woff") format("woff");
+  src:
+    url('/~suvimyn/2025/jakso1/projekti/src/assets/fonts/fa-solid-900.woff2')
+      format('woff2'),
+    url('/~suvimyn/2025/jakso1/projekti/src/assets/fonts/fa-solid-900.woff')
+      format('woff');
 }
 .fas {
   --fa-family: var(--fa-family-classic);
@@ -34,21 +38,24 @@
 }
 
 .fa-sun {
-  --fa: "\f185";
+  --fa: '\f185';
 }
 
 .fa-moon {
-  --fa: "\f186";
+  --fa: '\f186';
 }
 
 .fa-sun::before {
-  content: "\f185";
+  content: '\f185';
 }
 
 .fa-moon::before {
-  content: "\f186";
+  content: '\f186';
 }
 
-i.fa, i.fas, .fa, .fas {
+i.fa,
+i.fas,
+.fa,
+.fas {
   font-style: normal;
 }
