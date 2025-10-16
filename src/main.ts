@@ -67,8 +67,11 @@ const createTable = (restaurants: Restaurant[]) => {
     throw new Error("Oh no!");
   }
   table.innerHTML = "";
-  restaurants.forEach((restaurant) => {
+  restaurants.forEach((restaurant, index) => {
     const tr: HTMLTableRowElement = restaurantRow(restaurant);
+    if (index === 0) {
+      tr.classList.add("nearest-restaurant");
+    }
     table.appendChild(tr);
     tr.addEventListener("click", async () => {
       try {

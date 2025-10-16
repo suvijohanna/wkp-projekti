@@ -6,12 +6,16 @@ const restaurantRow = (restaurant: Restaurant) => {
   const tr = document.createElement("tr");
   const nameCell = document.createElement("td");
   nameCell.innerText = name;
+  nameCell.setAttribute("data-label", "Nimi");
   const addressCell = document.createElement("td");
   addressCell.innerText = address;
+  addressCell.setAttribute("data-label", "Osoite");
   const cityCell = document.createElement("td");
   cityCell.innerText = city;
+  cityCell.setAttribute("data-label", "Kaupunki");
   const companyCell = document.createElement("td");
   companyCell.innerText = company;
+  companyCell.setAttribute("data-label", "Yritys");
   tr.appendChild(nameCell);
   tr.appendChild(addressCell);
   tr.appendChild(cityCell);
@@ -24,48 +28,56 @@ const weeklyMenuHtml = (weeklyMenu: WeeklyMenu): string => {
 
   weeklyMenu.days.forEach((day) => {
     html += `<h4 class="modal-subheading">${day.date}</h4>`;
-    html += `<table class="weekly-menu-table">
-      <tr>
-        <th>Ruoka</th>
-        <th>Ruokavaliot</th>
-        <th>Hinta</th>
-      </tr>`;
+    html += `<table class="weekly-menu-table responsive-table">
+      <thead>
+        <tr>
+          <th>Ruoka</th>
+          <th>Ruokavaliot</th>
+          <th>Hinta</th>
+        </tr>
+      </thead>`;
 
     day.courses.forEach((course) => {
       const { name, diets, price } = course;
-      const formattedDiets = typeof diets === "string" ? diets.replace(/,(\S)/g, ", $1") : "-";
+      const formattedDiets = typeof diets === "string" && diets.trim() !== ""
+        ? diets.replace(/,(\S)/g, ", $1")
+        : "Ei saatavilla";
       html += `
         <tr>
-          <td>${name}</td>
-          <td>${formattedDiets}</td>
-          <td>${price ?? "-"}</td>
+          <td data-label="Ruoka">${name}</td>
+          <td data-label="Ruokavaliot">${formattedDiets}</td>
+          <td data-label="Hinta">${price ?? "Ei saatavilla"}</td>
         </tr>
       `;
     });
+  html += `</table>`;
+});
 
-    html += `</table>`;
-  });
 
   return html;
 };
 
 const dailyMenuTable = (menu: Courses): string => {
-  let html = `<table class="menu-table">
-    <tr>
-      <th>Ruoka</th>
-      <th>Ruokavaliot</th>
-      <th>Hinta</th>
-    </tr>
+  let html = `<table class="menu-table responsive-table">
+    <thead>
+      <tr>
+        <th>Ruoka</th>
+        <th>Ruokavaliot</th>
+        <th>Hinta</th>
+      </tr>
+    </thead>
   `;
 
   menu.courses.forEach((course) => {
     const { name, diets, price } = course;
-    const formattedDiets = typeof diets === "string" ? diets.replace(/,(\S)/g, ", $1") : "-";
+    const formattedDiets = typeof diets === "string" && diets.trim() !== ""
+      ? diets.replace(/,(\S)/g, ", $1")
+      : "Ei saatavilla";
     html += `
       <tr>
-        <td>${name}</td>
-        <td>${formattedDiets}</td>
-        <td>${price ?? " - "}</td>
+        <td data-label="Ruoka">${name}</td>
+        <td data-label="Ruokavaliot">${formattedDiets}</td>
+        <td data-label="Hinta">${price ?? "Ei saatavilla"}</td>
       </tr>
     `;
   });
@@ -73,6 +85,7 @@ const dailyMenuTable = (menu: Courses): string => {
   html += "</table>";
   return html;
 };
+
 
 const errorModal = (message: string, restaurant?: Restaurant) => {
   let html = `

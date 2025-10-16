@@ -62,8 +62,7 @@ body::before {
   height: 100vh;
   background-image: url('/~suvimyn/2025/jakso1/projekti/src/assets/img/pexels-kindelmedia-7651707.jpg');
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-position: center center;
   opacity: 0.3;
   z-index: -1;
   pointer-events: none;
@@ -220,6 +219,8 @@ main {
 
 .results {
   grid-area: table;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -338,6 +339,18 @@ dialog::backdrop {
   border-bottom: 1px solid var(--highlight);
 }
 
+.nearest-restaurant {
+  background-color: var(--highlight);
+  border-left: 4px solid var(--accent);
+  font-weight: 600;
+}
+
+.nearest-restaurant td:first-child::before {
+  content: 'Lähin • ';
+  color: var(--accent);
+  font-weight: bold;
+}
+
 @media (max-width: 871px) {
   .grid-layout {
     grid-template-columns: 1fr;
@@ -350,6 +363,23 @@ dialog::backdrop {
 
   header {
     font-size: 34px;
+  }
+
+  body::before {
+    display: none;
+  }
+
+  main {
+    max-width: 871px;
+    width: 100%;
+    padding: 10px 5px;
+    margin: 0;
+  }
+
+  .grid-layout h2 {
+    margin-top: 5px;
+    text-align: center;
+    margin-bottom: -15px;
   }
 
   #filters {
@@ -372,5 +402,111 @@ dialog::backdrop {
   #reset {
     width: 90%;
     max-width: 400px;
+  }
+
+  .results {
+    padding: 0;
+  }
+
+  dialog {
+    width: 90%;
+    max-width: 600px;
+    max-height: 70%;
+    padding: 15px;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: var(--card);
+  }
+
+  td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+    white-space: normal;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    top: 0.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  table.responsive-table,
+  table.responsive-table thead,
+  table.responsive-table tbody,
+  table.responsive-table th,
+  table.responsive-table td,
+  table.responsive-table tr {
+    display: block;
+  }
+
+  table.responsive-table thead {
+    display: none;
+  }
+
+  table.responsive-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: var(--card);
+  }
+
+  table.responsive-table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+    white-space: normal;
+  }
+
+  table.responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  table.responsive-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    top: 0.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  table.responsive-table th {
+    display: none;
+  }
+
+  table.weekly-menu-table thead tr,
+  table.menu-table thead tr {
+    display: none;
   }
 }
