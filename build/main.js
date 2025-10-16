@@ -116,6 +116,13 @@ if (checkbox) {
         localStorage.setItem("theme", newTheme);
     });
 }
+//Suodata tuloksia pienellä näytöllä
+const filterToggleBtn = document.getElementById("toggleFilters");
+const filters = document.getElementById("filters");
+filterToggleBtn.addEventListener("click", () => {
+    filterToggleBtn.classList.toggle("open");
+    filters.classList.toggle("open");
+});
 //Service worker
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker
@@ -137,12 +144,24 @@ modal.addEventListener('click', (event) => {
     }
 });
 //Etäisyyslaskuri
-const calculateDistance = (x1, y1, x2, y2) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (deg) => (deg * Math.PI) / 180;
+    const R = 6371e3;
+    const φ1 = toRad(lat1);
+    const φ2 = toRad(lat2);
+    const Δφ = toRad(lat2 - lat1);
+    const Δλ = toRad(lon2 - lon1);
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+};
 //Viikon ruokalista
 const fetchWeeklyMenu = async (restaurantId) => {
     return await fetchData(`${apiUrl}/restaurants/weekly/${restaurantId}/fi`);
 };
-//Ravintolataulukko
+//Ravintolataulukko ja ruokalistat päivälle sekä viikolle
 const createTable = (restaurants) => {
     const table = document.querySelector("table");
     if (!table) {
@@ -272,33 +291,35 @@ const success = async (pos) => {
         // Tallennetaan alkuperäinen etäisyysjärjestetty lista
         const distanceSortedRestaurants = [...restaurants];
         distanceSortedRestaurants.sort((a, b) => {
-            const x1 = crd.latitude;
-            const y1 = crd.longitude;
-            const x2a = a.location.coordinates[1];
-            const y2a = a.location.coordinates[0];
-            const distanceA = calculateDistance(x1, y1, x2a, y2a);
-            const x2b = b.location.coordinates[1];
-            const y2b = b.location.coordinates[0];
-            const distanceB = calculateDistance(x1, y1, x2b, y2b);
+            const userLat = crd.latitude;
+            const userLon = crd.longitude;
+            // Ravintolan koordinaatit, oletetaan että location.coordinates = [longitude, latitude]
+            const latA = a.location.coordinates[1];
+            const lonA = a.location.coordinates[0];
+            const latB = b.location.coordinates[1];
+            const lonB = b.location.coordinates[0];
+            const distanceA = calculateDistance(userLat, userLon, latA, lonA) / 1000;
+            const distanceB = calculateDistance(userLat, userLon, latB, lonB) / 1000;
             return distanceA - distanceB;
         });
         // Aluksi näytetään etäisyysjärjestyksessä
         createTable(distanceSortedRestaurants);
+        //Filtterit
         const sodexoBtn = document.querySelector("#sodexo");
         const compassBtn = document.querySelector("#compass");
         const resetBtn = document.querySelector("#reset");
         const citySelect = document.getElementById("cityFilter");
         const sortAlphaBtn = document.querySelector("#sortAlphabetically");
-        if (!sodexoBtn ||
-            !compassBtn ||
-            !resetBtn ||
-            !citySelect ||
-            !sortAlphaBtn) {
+        const nameInput = document.querySelector("#nameFilter");
+        const distanceSelect = document.querySelector("#distanceFilter");
+        if (!sodexoBtn || !compassBtn || !resetBtn || !citySelect || !sortAlphaBtn || !nameInput || !distanceSelect) {
             return;
         }
         let selectedCompany = "";
         let selectedCity = "";
         let isSortedAlphabetically = false;
+        let nameQuery = "";
+        let distanceLimit = null;
         function populateCityFilter() {
             if (!citySelect)
                 return;
@@ -326,13 +347,6 @@ const success = async (pos) => {
             selectedCompany = "Compass Group";
             filterRestaurants();
         });
-        resetBtn.addEventListener("click", () => {
-            selectedCompany = "";
-            selectedCity = "";
-            citySelect.value = "";
-            isSortedAlphabetically = false;
-            filterRestaurants();
-        });
         citySelect.addEventListener("change", () => {
             selectedCity = citySelect.value;
             filterRestaurants();
@@ -341,16 +355,46 @@ const success = async (pos) => {
             isSortedAlphabetically = !isSortedAlphabetically;
             filterRestaurants();
         });
+        nameInput.addEventListener("input", () => {
+            nameQuery = nameInput.value.trim().toLowerCase();
+            filterRestaurants();
+        });
+        distanceSelect.addEventListener("change", () => {
+            const value = distanceSelect.value;
+            distanceLimit = value ? parseInt(value) : null;
+            filterRestaurants();
+        });
+        resetBtn.addEventListener("click", () => {
+            selectedCompany = "";
+            selectedCity = "";
+            citySelect.value = "";
+            isSortedAlphabetically = false;
+            nameQuery = "";
+            nameInput.value = "";
+            distanceLimit = null;
+            distanceSelect.value = "";
+            filterRestaurants();
+        });
         function filterRestaurants() {
             let filtered = distanceSortedRestaurants.filter((restaurant) => {
                 const matchCompany = selectedCompany === "" || restaurant.company === selectedCompany;
                 const matchCity = selectedCity === "" || restaurant.city === selectedCity;
-                return matchCompany && matchCity;
+                const matchName = nameQuery === "" || restaurant.name.toLowerCase().includes(nameQuery.toLowerCase());
+                // Lasketaan etäisyys ja muutetaan se kilometreiksi
+                const distanceKm = calculateDistance(crd.latitude, crd.longitude, restaurant.location.coordinates[1], restaurant.location.coordinates[0]) / 1000; // Etäisyys kilometreissä
+                // Varmistetaan, että distanceLimit on oikeassa muodossa (muutetaan numeeriseksi)
+                const distanceLimitNum = distanceLimit ? Number(distanceLimit) : Infinity;
+                // Tarkistetaan, täyttääkö ravintola etäisyysrajan
+                const matchDistance = distanceKm <= distanceLimitNum + 0.01;
+                // Lisätyt konsolilokit:
+                console.log(`Ravintola: ${restaurant.name}`);
+                console.log(`Etäisyys: ${distanceKm.toFixed(2)} km`);
+                console.log(`Valittu etäisyysraja: ${distanceLimitNum} km`);
+                console.log(`Match distance: ${matchDistance}`);
+                return matchCompany && matchCity && matchName && matchDistance;
             });
             if (isSortedAlphabetically) {
-                filtered = filtered
-                    .slice()
-                    .sort((a, b) => a.name.localeCompare(b.name));
+                filtered = filtered.slice().sort((a, b) => a.name.localeCompare(b.name));
             }
             createTable(filtered);
         }

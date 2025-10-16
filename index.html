@@ -57,7 +57,10 @@
     </header>
     <main class="grid-layout">
       <h2>Suodata tuloksia</h2>
-      <div id="filters">
+      <button id="toggleFilters" class="filter-toggle-btn">
+        <span>&#x1F847;</span>
+      </button>
+      <div id="filters" class="filters-hidden">
         <fieldset class="filter-group">
           <legend>Järjestä</legend>
           <button id="sortAlphabetically">Aakkosjärjestys</button>
@@ -72,6 +75,25 @@
           <label for="cityFilter">Rajaa kaupungin mukaan:</label>
           <select id="cityFilter">
             <option value="">Kaikki kaupungit</option>
+          </select>
+        </fieldset>
+        <fieldset class="filter-group">
+          <legend>Hae nimellä</legend>
+          <input
+            type="text"
+            id="nameFilter"
+            placeholder="Syötä ravintolan nimi"
+          />
+        </fieldset>
+        <fieldset class="filter-group">
+          <legend>Etäisyys</legend>
+          <label for="distanceFilter">Rajaa etäisyyden mukaan:</label>
+          <select id="distanceFilter">
+            <option value="">Kaikki etäisyydet</option>
+            <option value="1">Alle 1 km</option>
+            <option value="2">Alle 2 km</option>
+            <option value="5">Alle 5 km</option>
+            <option value="10">Alle 10 km</option>
           </select>
         </fieldset>
         <button id="reset" class="reset-button">Näytä kaikki</button>

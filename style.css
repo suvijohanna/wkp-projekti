@@ -92,7 +92,7 @@ main {
     'title title theme'
     'filters filters filters'
     'table table table';
-  gap: 1.5em;
+  gap: 1em;
 }
 
 .grid-layout h2 {
@@ -101,13 +101,40 @@ main {
   color: var(--primary);
 }
 
+.filter-toggle-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: var(--primary);
+  cursor: pointer;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.filter-toggle-btn:hover {
+  color: var(--accent);
+}
+
+.filter-toggle-btn.open {
+  transform: rotate(180deg);
+}
+
 #filters {
   grid-area: filters;
   display: flex;
   flex-wrap: wrap;
   gap: 1.5em;
   justify-content: center;
-  margin-bottom: 20px;
+  transition: max-height 0.3s ease-in-out;
+}
+
+#filters.open {
+  max-height: 1000px;
+  overflow: visible;
+  padding: 1em;
 }
 
 .filter-group {
@@ -118,7 +145,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 200px;
 }
 
 .filter-group legend {
@@ -142,22 +168,30 @@ main {
   background-color: #e69100;
 }
 
+.filter-group input,
+.filter-group select {
+  width: 100%;
+}
+
 #filters .reset-button {
   align-self: center;
-  background-color: #ccc;
+  background-color: var(--accent);
   color: #000;
   padding: 0.5em 1em;
   border-radius: 4px;
   border: none;
   cursor: pointer;
   margin-top: 1em;
+  width: 20%;
 }
 
 #filters .reset-button:hover {
-  background-color: #aaa;
+  background-color: var(--accent);
 }
 
-#cityFilter {
+#cityFilter,
+#distanceFilter,
+#nameFilter {
   margin-top: 10px;
   padding: 0.5em 1em;
   border: 1px solid #ccc;
@@ -166,6 +200,8 @@ main {
   color: var(--text);
   font-size: 0.95em;
   cursor: pointer;
+  width: 100%;
+  max-width: 100%;
 }
 
 #teema {
@@ -345,18 +381,13 @@ dialog::backdrop {
   font-weight: 600;
 }
 
-.nearest-restaurant td:first-child::before {
-  content: 'Lähin • ';
-  color: var(--accent);
-  font-weight: bold;
-}
-
 @media (max-width: 871px) {
   .grid-layout {
     grid-template-columns: 1fr;
     grid-template-areas:
       'theme'
       'title'
+      'toggleFilters'
       'filters'
       'table';
   }
@@ -382,15 +413,24 @@ dialog::backdrop {
     margin-bottom: -15px;
   }
 
+  .filter-toggle-btn {
+    display: block;
+  }
+
   #filters {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    grid-area: filters;
+    display: flex;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .filters-visible {
+    max-height: 1000px;
   }
 
   .filter-group {
     width: 90%;
-    max-width: 400px;
     padding: 10px;
     gap: 8px;
   }
